@@ -1,10 +1,13 @@
 import React, { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { AuthContext } from "../auth";
-import { post } from "../api";
+import { get, post } from "../api";
 
 export default function Register() {
+  const { login } = useContext(AuthContext);
   const roles = ["user", "moderator", "admin"];
+  const navigate = useNavigate();
 
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -13,7 +16,24 @@ export default function Register() {
 
   const register = async (e) => {
     e.preventDefault();
-    await post("auth/register", { username, email, password, role });
+    const authRes = await post("auth/register", {
+      username,
+      email,
+      password,
+      role,
+    }).then((r) => r.json());
+    console.log("auth", authRes);
+    const token = authRes.token;
+
+    const user = await get("users/self", { token }).then((r) => r.json());
+    console.log("user", user);
+
+    if (token) {
+      login(token, user.id, username);
+      navigate("/");
+    } else {
+      alert("Registration failed!");
+    }
   };
 
   return (

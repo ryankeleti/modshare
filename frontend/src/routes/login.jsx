@@ -20,7 +20,7 @@ export default function Login() {
     console.log("auth", authRes);
     const token = authRes.token;
 
-    const user = await get("users/self", {token}).then((r) => r.json());
+    const user = await get("users/self", { token }).then((r) => r.json());
     console.log("user", user);
 
     if (token) {

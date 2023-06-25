@@ -47,6 +47,14 @@ export const findSaveForMod = async (uid, modrinth_id, requester) => {
   }
 };
 
+export const findUsersThatSavedMod = async (modrinth_id, requester) => {
+  if (["admin", "moderator"].includes(requester.role)) {
+    return await modSaveModel.find({ modrinth_id }, "saved_by").populate("saved_by").exec();
+  } else {
+    return await modSaveModel.find({ modrinth_id, is_private: false }, "saved_by").populate("saved_by").exec();
+  }
+};
+
 export const changeVisibility = async (id, is_private , requester) => {
   const modSave = await modSaveModel.findOneById(id);
   if (["admin", "moderator"].includes(requester.role) ||  modSave.saved_by === requester.id) {
@@ -59,7 +67,10 @@ export const createModSave = async (
   requester
 ) => {
   if (requester.role === "admin" || saved_by == requester.id) {
-    await modSaveModel.create({ modrinth_id, saved_by, is_private });
+    const exists = await modSaveModel.exists({ modrinth_id, saved_by });
+    if (!exists) {
+      await modSaveModel.create({ modrinth_id, saved_by, is_private });
+    }
   }
 };
 

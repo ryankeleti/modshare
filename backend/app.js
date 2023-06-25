@@ -7,7 +7,7 @@ import authApi from "./apis/auth-api.js";
 import saveApi from "./apis/save-api.js";
 import modrinthApi from "./apis/modrinth-api.js";
 
-const MONGODB_URI = "mongodb://127.0.0.1:27017";
+const MONGODB_URI = "mongodb://127.0.0.1:27017/modshare";
 mongoose.connect(MONGODB_URI);
 
 const app = express();

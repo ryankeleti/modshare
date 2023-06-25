@@ -5,6 +5,7 @@ import {
   findModSaveById,
   findUserModSaves,
   findSaveForMod,
+  findUsersThatSavedMod,
   changeVisibility,
   createModSave,
   deleteModSave,
@@ -27,7 +28,8 @@ saveApi.get("/:sid", authenticate, async (req, res) => {
 
 saveApi.put("/:sid", authenticate, async (req, res) => {
   const sid = req.params.sid;
-
+  const is_private = req.query.is_private;
+  await changeVisibility(sid, is_private, req.user);
 });
 
 saveApi.get("/user/:uid/:pid", authenticate, async (req, res) => {
@@ -44,8 +46,10 @@ saveApi.get("/user/:uid/:pid", authenticate, async (req, res) => {
 
 saveApi.get("/user/:uid", authenticate, async (req, res) => {
   const uid = req.params.uid;
+  if (uid) {
   const modSaves = await findUserModSaves(uid, req.user);
   res.json(modSaves);
+  }
 });
 
 saveApi.post("/", authenticate, async (req, res) => {
@@ -57,6 +61,14 @@ saveApi.delete("/:sid", authenticate, async (req, res) => {
   const sid = req.params.sid;
   await deleteModSave(sid, req.user);
   res.send("");
+});
+
+saveApi.get("/:pid/users", authenticate, async (req, res) => {
+  const pid = req.params.pid;
+  if (pid) {
+    const users = await findUsersThatSavedMod(pid, req.user);
+    res.json(users);
+  }
 });
 
 export default saveApi;
