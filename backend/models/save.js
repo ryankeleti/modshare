@@ -16,8 +16,8 @@ export const findModSaveById = async (id, requester) => {
   const modSave = await modSaveModel.findById(id);
   if (
     ["admin", "moderator"].includes(requester.role) ||
-    modSave.saved_by === requester.id
-    || !modSave.is_private
+    modSave.saved_by === requester.id ||
+    !modSave.is_private
   ) {
     return modSave;
   } else {
@@ -38,8 +38,7 @@ export const findSaveForMod = async (uid, modrinth_id, requester) => {
     const modSave = await modSaveModel.findOne({ saved_by: uid, modrinth_id });
     if (!modSave || modSave.is_private) {
       return null;
-    }
-    else {
+    } else {
       return modSave;
     }
   } else {
@@ -49,15 +48,24 @@ export const findSaveForMod = async (uid, modrinth_id, requester) => {
 
 export const findUsersThatSavedMod = async (modrinth_id, requester) => {
   if (["admin", "moderator"].includes(requester.role)) {
-    return await modSaveModel.find({ modrinth_id }, "saved_by").populate("saved_by").exec();
+    return await modSaveModel
+      .find({ modrinth_id }, "saved_by")
+      .populate("saved_by")
+      .exec();
   } else {
-    return await modSaveModel.find({ modrinth_id, is_private: false }, "saved_by").populate("saved_by").exec();
+    return await modSaveModel
+      .find({ modrinth_id, is_private: false }, "saved_by")
+      .populate("saved_by")
+      .exec();
   }
 };
 
-export const changeVisibility = async (id, is_private , requester) => {
+export const changeVisibility = async (id, is_private, requester) => {
   const modSave = await modSaveModel.findOneById(id);
-  if (["admin", "moderator"].includes(requester.role) ||  modSave.saved_by === requester.id) {
+  if (
+    ["admin", "moderator"].includes(requester.role) ||
+    modSave.saved_by === requester.id
+  ) {
     await modSaveModel.findByIdAndUpdate(id, { is_private });
   }
 };

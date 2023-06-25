@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { useNavigate, Nagivate } from "react-router-dom";
 
 import { AuthContext } from "../auth";
-import { get, post } from "../api";
+import { get, post, put } from "../api";
 
 export default function SelfProfile() {
   const { auth, logout } = useContext(AuthContext);
@@ -30,15 +30,17 @@ export default function SelfProfile() {
     }).then((r) => r.json());
     console.log(saveIds);
 
-    const saves = await Promise.all(
-      saveIds.map(
-        async ({ modrinth_id }) =>
-          await get(`modrinth/projects/${modrinth_id}`).then((r) => r.json())
-      )
-    );
+    if (saveIds && !saveIds.error) {
+      const saves = await Promise.all(
+        saveIds.map(
+          async ({ modrinth_id }) =>
+            await get(`modrinth/projects/${modrinth_id}`).then((r) => r.json())
+        )
+      );
 
-    console.log(saves);
-    setSaves(saves);
+      console.log(saves);
+      setSaves(saves);
+    }
   };
 
   const performLogout = () => {
@@ -47,8 +49,10 @@ export default function SelfProfile() {
     navigate("/");
   };
 
-  const changeEmail = (e) => {
+  const changeEmail = async (e) => {
     e.preventDefault();
+    await put(`users/${user.id}`, { email }, { token: auth.token });
+    //  navigate(0);
   };
 
   useEffect(() => {
@@ -85,7 +89,7 @@ export default function SelfProfile() {
       </div>
       <div className="mb-3 list-group">
         <h2>My saves</h2> <hr />
-        {saves.length &&
+        {saves.length ? (
           saves.map((save) => (
             <a
               href={`/details/${save.id}`}
@@ -103,7 +107,10 @@ export default function SelfProfile() {
               </div>
               <small>{save.description}</small>
             </a>
-          ))}
+          ))
+        ) : (
+          <></>
+        )}
       </div>
     </>
   );

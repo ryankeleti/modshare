@@ -36,7 +36,7 @@ const createToken = (user) =>
     { id: user._id, username: user.username, role: user.role },
     JWT_SECRET,
     {
-      expiresIn: "1000s",
+      expiresIn: "10000s",
     }
   );
 

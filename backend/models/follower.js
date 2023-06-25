@@ -16,8 +16,17 @@ export const findFollowers = async (user) =>
     .populate("follower")
     .exec();
 
-export const follow = ({ followee, follower }) =>
-  followerModel.create({ followee, follower });
+export const doesFollow = ({ followee, follower }) =>
+  followerModel.exists({ followee, follower });
+
+export const follow = async ({ followee, follower }) => {
+  const exists = await doesFollow({ followee, follower });
+  if (!exists) {
+    return await followerModel.create({ followee, follower });
+  } else {
+    return null;
+  }
+};
 
 export const unfollow = ({ followee, follower }) =>
   followerModel.findOneAndDelete({ followee, follower });

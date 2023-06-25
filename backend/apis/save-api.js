@@ -22,7 +22,7 @@ saveApi.get("/:sid", authenticate, async (req, res) => {
     res.json(modSave);
   } else {
     res.status(404);
-    res.send({error: "Save not found"});
+    res.send({ error: "Save not found" });
   }
 });
 
@@ -40,15 +40,15 @@ saveApi.get("/user/:uid/:pid", authenticate, async (req, res) => {
     res.json(modSave);
   } else {
     res.status(404);
-    res.send({error:"Save not found"});
+    res.send({ error: "Save not found" });
   }
 });
 
 saveApi.get("/user/:uid", authenticate, async (req, res) => {
   const uid = req.params.uid;
   if (uid) {
-  const modSaves = await findUserModSaves(uid, req.user);
-  res.json(modSaves);
+    const modSaves = await findUserModSaves(uid, req.user);
+    res.json(modSaves);
   }
 });
 
