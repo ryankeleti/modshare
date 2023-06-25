@@ -1,0 +1,27 @@
+{
+  "name": "frontend",
+  "version": "0.1.0",
+  "private": true,
+  "source": "src/index.html",
+  "scripts": {
+    "build": "parcel build",
+    "dev": "parcel -p 3000"
+  },
+  "dependencies": {
+    "bootstrap": "^5.3.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.13.0"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app"
+    ]
+  },
+  "devDependencies": {
+    "eslint": "^8.43.0",
+    "parcel": "^2.9.2",
+    "prettier": "^2.8.8",
+    "process": "^0.11.10"
+  }
+}
