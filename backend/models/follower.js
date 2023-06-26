@@ -16,6 +16,12 @@ export const findFollowers = async (user) =>
     .populate("follower")
     .exec();
 
+export const findFollowing = async (user) =>
+  await followerModel
+    .find({ follower: user }, "followee")
+    .populate("followee")
+    .exec();
+
 export const doesFollow = ({ followee, follower }) =>
   followerModel.exists({ followee, follower });
 

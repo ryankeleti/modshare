@@ -13,6 +13,7 @@ export default function Detail() {
   const [users, setUsers] = useState([]);
 
   const fetchProject = async () => {
+    console.log("pid", pid);
     const result = await get(`modrinth/projects/${pid}`).then((r) => r.json());
     setProject(result);
     if (auth.authorized) {
@@ -59,6 +60,7 @@ export default function Detail() {
         <h2>{project.title}</h2>
 
         <p>{project.description}</p>
+        <p><a href={`https://modrinth.com/project/${project.id}`}>View on Modrinth</a></p>
 
         {auth.authorized ? (
           isSaved ? (

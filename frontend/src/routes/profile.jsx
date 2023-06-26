@@ -12,6 +12,8 @@ export default function Profile() {
   const [user, setUser] = useState({});
   const [saves, setSaves] = useState([]);
   const [isFollowing, setIsFollowing] = useState(false);
+  const [followers, setFollowers] = useState([]);
+  const [following, setFollowing] = useState([]);
 
   const fetchUser = async () => {
     const user = await get(`users/${uid}`, { token: auth.token }).then((r) =>
@@ -40,7 +42,7 @@ export default function Profile() {
     }
   };
 
-  const fetchFollowing = async () => {
+  const fetchIsFollowing = async () => {
     const follow = await get(`users/${auth.id}/follow/${uid}`).then((r) =>
       r.json()
     );
@@ -50,6 +52,13 @@ export default function Profile() {
     } else {
       setIsFollowing(false);
     }
+  };
+
+  const fetchFollowing = async () => {
+  };
+
+  const fetchFollowers=async()=>{
+
   };
 
   const adminDelete = async (e) => {};
@@ -85,7 +94,9 @@ export default function Profile() {
   useEffect(() => {
     fetchUser();
     fetchSaves();
+    fetchIsFollowing();
     fetchFollowing();
+    fetchFollowers();
   }, []);
 
   return (
@@ -100,23 +111,30 @@ export default function Profile() {
         )}
       </div>
 
-     { auth.id != uid &&
-      <div className="mb-3">
-        {isFollowing ? (
-          <form onSubmit={unfollow}>
-            <button type="submit" className="btn btn-danger">
-              Unfollow
-            </button>
-          </form>
-        ) : (
-          <form onSubmit={follow}>
-            <button type="submit" className="btn btn-success">
-              Follow
-            </button>
-          </form>
-        )}
-      </div>
-     }
+      {auth.id != uid && (
+        <div className="mb-3">
+          {isFollowing ? (
+            <form onSubmit={unfollow}>
+              <button type="submit" className="btn btn-danger">
+                Unfollow
+              </button>
+            </form>
+          ) : (
+            <form onSubmit={follow}>
+              <button type="submit" className="btn btn-success">
+                Follow
+              </button>
+            </form>
+          )}
+        </div>
+    )}
+
+    {auth.role === "admin" && (
+      <form onSubmit={adminDelete}>
+      <button type="submit" className="btn btn-danger">
+        Delete user
+      </button>
+      </form>) }
 
       <div className="list-group">
         {saves.length ? (

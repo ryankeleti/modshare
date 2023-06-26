@@ -8,6 +8,7 @@ import {
 } from "../models/user.js";
 import {
   findFollowers,
+  findFollowing,
   doesFollow,
   follow,
   unfollow,
@@ -42,6 +43,12 @@ userApi.get("/:uid/followers", async (req, res) => {
   const id = req.params.uid;
   const followers = await findFollowers(id);
   res.json(followers);
+});
+
+userApi.get("/:uid/following", async (req, res) => {
+  const id = req.params.uid;
+  const following = await findFollowing(id);
+  res.json(following);
 });
 
 userApi.get("/:follower/follow/:followee", async (req, res) => {

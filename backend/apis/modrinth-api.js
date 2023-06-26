@@ -50,7 +50,7 @@ modrinthApi.get("/random", async (req, res) => {
 
 modrinthApi.get("/projects/:pid", async (req, res) => {
   const pid = req.params.pid;
-  if (pid) {
+  if (pid !== undefined && pid) {
     const project = await get(`project/${pid}`).then((r) => r.json());
     res.json(project);
   }
